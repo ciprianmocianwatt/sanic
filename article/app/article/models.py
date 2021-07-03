@@ -22,7 +22,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True)
     article = relationship("Article", backref="article")
-    email_history = relationship("UserEmailHistory", backref="user")
+    email_histories = relationship("UserEmailHistory", backref="user")
+    addresses = relationship("Address", backref="user")
 
 
 class UserEmailHistory(Base):
@@ -38,3 +39,13 @@ class Magazine(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
+
+
+class Address(Base):
+    __tablename__ = "address"
+
+    id = Column(Integer, primary_key=True)
+    street = Column(String)
+    postcode = Column(String)
+    number = Column(Integer)
+    user_id = Column(ForeignKey("user.id"))
