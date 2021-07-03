@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+    - 5432:5432
+    volumes:
+      - article_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  article:
+    build:
+      context: article
+    ports:
+      - 8000:8000
+    command: python3 app/main.py
+    depends_on:
+      - postgres
+    environment:
+      app_name: article_app
+      debug_mode: 1
+      session_secret: "my supersecret"
+      COOKIE_STORAGE: 1
+      REVOKED_STORAGE: 2
+      SMS_CODES: 3
+      DB_USED: postgresql+asyncpg
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: article
+    volumes:
+      - ./article:/app
+
+volumes:
+  article_data:
+  media: {}
